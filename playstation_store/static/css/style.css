@@ -1,0 +1,18 @@
+/* PlayStation Store Custom Styles */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.text-primary {
+    color: #00439c !important; /* PS Blue */
+}
+
+.btn-primary {
+    background-color: #00439c;
+    border-color: #003073;
+}
+
+.btn-primary:hover {
+    background-color: #003073;
+}

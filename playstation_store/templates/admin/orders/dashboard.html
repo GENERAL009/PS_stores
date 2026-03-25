@@ -1,0 +1,90 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    .dashboard-container { padding: 20px; font-family: 'Inter', sans-serif; }
+    .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .period-filters { display: flex; gap: 10px; }
+    .filter-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; text-decoration: none; color: #333; }
+    .filter-btn.active { background: #417690; color: #fff; border-color: #417690; }
+    .stats-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
+    .category-list { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 15px; }
+    .category-item { padding: 12px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+    .category-item:hover { background: #f8f9fa; }
+    .category-item.active { background: #eef4f7; border-color: #417690; font-weight: bold; }
+    .product-list { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 25px; }
+    .product-table { width: 100%; border-collapse: collapse; }
+    .product-table th { text-align: left; padding: 12px; border-bottom: 2px solid #eee; color: #666; }
+    .product-table td { padding: 15px 12px; border-bottom: 1px solid #f0f0f0; }
+    .bar-container { width: 100%; height: 8px; background: #eee; border-radius: 4px; margin-top: 5px; overflow: hidden; }
+    .bar-fill { height: 100%; background: #417690; border-radius: 4px; }
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; background: #eef4f7; color: #417690; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="stats-header">
+        <h1>Sales Analytics Dashboard</h1>
+        <div class="period-filters">
+            <a href="?period=7&category={{ selected_category }}" class="filter-btn {% if period == '7' %}active{% endif %}">1 Week</a>
+            <a href="?period=30&category={{ selected_category }}" class="filter-btn {% if period == '30' %}active{% endif %}">1 Month</a>
+            <a href="?period=180&category={{ selected_category }}" class="filter-btn {% if period == '180' %}active{% endif %}">6 Months</a>
+            <a href="?period=365&category={{ selected_category }}" class="filter-btn {% if period == '365' %}active{% endif %}">1 Year</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="category-list">
+            <h3 style="margin-top:0">Categories</h3>
+            <a href="?period={{ period }}" style="text-decoration:none; color:inherit">
+                <div class="category-item {% if not selected_category %}active{% endif %}">
+                    All Categories
+                </div>
+            </a>
+            {% for cat in categories %}
+            <a href="?period={{ period }}&category={{ cat.id }}" style="text-decoration:none; color:inherit">
+                <div class="category-item {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}">
+                    {{ cat.name }}
+                    <span style="float:right; color:#999; font-size:12px">{{ cat.total_sales|default:0 }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        <div class="product-list">
+            <h3 style="margin-top:0">Top Selling Products</h3>
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th style="width:200px">Sales Volume</th>
+                        <th>Quantity Sold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in products %}
+                    <tr>
+                        <td><strong>{{ item.product__name }}</strong></td>
+                        <td><span class="badge">{{ item.product__category__name }}</span></td>
+                        <td>
+                            <div class="bar-container">
+                                <div class="bar-fill" style="width: {{ item.percentage }}%"></div>
+                            </div>
+                        </td>
+                        <td><strong>{{ item.total_sold }}</strong></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding:40px; color:#999">No data available for this period.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

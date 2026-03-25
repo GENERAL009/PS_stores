@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.git/
+.gitignore
+db.sqlite3
+media/
+static/
+err.html
+Dockerfile
+docker-compose.yml
+nginx/

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - PlayStation Store{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 text-center">
+        <!-- Placeholder for product image -->
+        <div class="bg-light p-5 rounded d-flex align-items-center justify-content-center" style="height: 400px; font-size: 2rem; color: #ccc;">
+            [ Product Image Here ]
+        </div>
+    </div>
+    <div class="col-md-6 py-4">
+        <h2>{{ product.name }}</h2>
+        <h5 class="text-muted mb-3">{{ product.category.name }} | {{ product.model }}</h5>
+        <h3 class="text-primary mb-4">${{ product.price }}</h3>
+        <p>{{ product.description }}</p>
+
+        <hr>
+        {% if user.is_authenticated %}
+        <form action="{% url 'orders:add_to_cart' product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg w-100">Add to Cart</button>
+        </form>
+        {% else %}
+        <a href="{% url 'users:login' %}" class="btn btn-primary btn-lg w-100">Login to Buy</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

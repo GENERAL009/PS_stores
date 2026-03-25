@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    <li>
+        <a href="dashboard/" class="addlink" style="background: linear-gradient(135deg, #417690 0%, #2a4d5e 100%); color: white; border: none; font-weight: bold;">
+            {% trans "📊 SALES DASHBOARD" %}
+        </a>
+    </li>
+    {{ block.super }}
+{% endblock %}

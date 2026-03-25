@@ -1,0 +1,57 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: playstation_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: playstation_store_db
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  backend:
+    build: ./playstation_store
+    container_name: playstation_backend
+    restart: always
+    environment:
+      - DB_NAME=playstation_store_db
+      - DB_USER=root
+      - DB_PASSWORD=root_password
+      - DB_HOST=db
+      - DB_PORT=3306
+    env_file:
+      - ./playstation_store/.env
+    depends_on:
+      - db
+    volumes:
+      - ./playstation_store/staticfiles:/app/staticfiles
+      - ./playstation_store/static:/app/static
+      - ./playstation_store/media:/app/media
+
+  frontend:
+    build: ./playstation_frontend
+    container_name: playstation_frontend
+    restart: always
+    env_file:
+      - ./playstation_frontend/.env.local
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    container_name: playstation_nginx
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./playstation_store/staticfiles:/app/static:ro
+      - ./playstation_store/media:/app/media
+    ports:
+      - "8080:80"
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mysql_data:

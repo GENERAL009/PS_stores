@@ -39,7 +39,7 @@ export default function CheckoutPage() {
         <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mb-6 border border-slate-800">
           <Wallet size={32} className="text-slate-600" />
         </div>
-        <h1 className="text-3xl font-black text-white mb-4 italic tracking-tighter uppercase">
+        <h1 className="text-2xl sm:text-3xl font-black text-white mb-4 italic tracking-tighter uppercase">
           Your vault is empty
         </h1>
         <p className="text-slate-500 mb-8 max-w-xs">
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
       });
 
       setItems([]);
-      addNotification({ type: "success", message: "SUCCESS: Order Executed Successfully! ??" });
+      addNotification({ type: "success", message: "SUCCESS: Order Executed Successfully!" });
       router.push("/profile");
     } catch (err: any) {
       const errMsg = err.response?.data?.error || "SMS kod noto'g'ri";
@@ -104,16 +104,16 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen pt-10 sm:pt-20 px-4 pb-20">
       <div className="max-w-6xl mx-auto space-y-10">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 border-b border-slate-900 pb-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 border-b border-slate-900 pb-10">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-blue-500 font-black text-[10px] uppercase tracking-[0.4em]">
               <ShieldCheck size={14} /> Encrypted Session
             </div>
-            <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tighter">
+            <h1 className="text-3xl sm:text-6xl font-black text-white tracking-tighter uppercase italic">
               CHECKOUT
             </h1>
           </div>
-          <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs font-black text-slate-400 tracking-widest uppercase mb-1">
+          <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-black text-slate-400 tracking-widest uppercase mb-1">
             Mission: Finalize Order
           </div>
         </div>
@@ -121,12 +121,12 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* Left Side: Summary - Priority 2 on Mobile */}
           <div className="lg:col-span-4 space-y-6 order-2 lg:order-1">
-            <div className="premium-card rounded-[2.5rem] p-8 sm:p-10 bg-gradient-to-br from-slate-900 to-black border-slate-800 relative overflow-hidden">
+            <div className="premium-card rounded-[2.5rem] p-6 sm:p-10 bg-gradient-to-br from-slate-900 to-black border-slate-800 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
                 <Wallet size={80} />
               </div>
 
-              <h2 className="text-xs font-black uppercase text-slate-500 mb-8 tracking-[0.3em] flex items-center gap-2">
+              <h2 className="text-[10px] font-black uppercase text-slate-500 mb-8 tracking-[0.3em] flex items-center gap-2">
                 <CheckCircle size={14} /> Payload Summary
               </h2>
 
@@ -149,19 +149,19 @@ export default function CheckoutPage() {
               </div>
 
               <div className="border-t border-slate-800/80 pt-8 space-y-4">
-                <div className="flex justify-between text-xs font-black uppercase tracking-widest text-slate-500">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
                   <span>Base Value</span>
                   <span>${total().toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-xs font-black uppercase tracking-widest text-emerald-500">
+                <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-emerald-500">
                   <span>Logistics</span>
                   <span>$0.00</span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-slate-900">
-                  <span className="text-sm font-black text-white uppercase tracking-widest">
+                  <span className="text-xs font-black text-white uppercase tracking-widest">
                     Aggregate Total
                   </span>
-                  <span className="text-3xl font-black text-blue-500 tabular-nums tracking-tighter">
+                  <span className="text-2xl sm:text-3xl font-black text-blue-500 tabular-nums tracking-tighter">
                     ${total().toFixed(2)}
                   </span>
                 </div>
@@ -177,7 +177,7 @@ export default function CheckoutPage() {
                   Security Status
                 </p>
                 <p className="text-xs font-bold text-slate-300">
-                  End-to-End Encryption Active
+                  End-to-End Encryption
                 </p>
               </div>
             </div>
@@ -185,20 +185,20 @@ export default function CheckoutPage() {
 
           {/* Right Side: Payment Form - Priority 1 on Mobile */}
           <div className="lg:col-span-8 order-1 lg:order-2">
-            <div className="premium-card rounded-[3rem] p-8 sm:p-12 relative overflow-hidden bg-slate-950 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)]">
+            <div className="premium-card rounded-[3rem] p-6 sm:p-12 relative overflow-hidden bg-slate-950 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)] border-slate-900">
               <div className="absolute top-0 right-0 p-12 opacity-5 -rotate-12 pointer-events-none">
                 <CreditCard size={150} className="text-blue-500" />
               </div>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-12 border-b border-slate-900 pb-10">
                 <div className="space-y-2">
-                  <h2 className="text-3xl font-black text-white italic tracking-tighter">
+                  <h2 className="text-2xl sm:text-3xl font-black text-white italic tracking-tighter uppercase">
                     UZUM GATEWAY
                   </h2>
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span className="text-[10px] font-black text-slate-500 tracking-widest uppercase">
-                      Verified Merchant Terminal
+                      Verified Terminal
                     </span>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export default function CheckoutPage() {
                 <form onSubmit={handleInitialize} className="space-y-8 max-w-xl">
                   <div className="space-y-4">
                     <label className="block text-[10px] uppercase text-slate-600 font-black mb-1 ml-1 tracking-[0.2em]">
-                      Asset Identifier (Card Number)
+                      Asset Identifier (Card)
                     </label>
                     <div className="relative group">
                       <CreditCard
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
                       <input
                         type="text"
                         placeholder="8600 0000 0000 0000"
-                        className="w-full h-16 bg-black/40 border-2 border-slate-900 rounded-[1.25rem] pl-12 pr-6 text-white text-xl font-black placeholder-slate-800 outline-none focus:border-blue-600 transition-all tracking-widest tabular-nums"
+                        className="w-full h-14 sm:h-16 bg-black/40 border-2 border-slate-900 rounded-[1.25rem] pl-12 pr-6 text-lg sm:text-xl font-black placeholder-slate-800 outline-none focus:border-blue-600 transition-all tracking-widest tabular-nums"
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
                         required
@@ -242,7 +242,7 @@ export default function CheckoutPage() {
                       <input
                         type="text"
                         placeholder="MM/YY"
-                        className="w-full h-16 bg-black/40 border-2 border-slate-900 rounded-[1.25rem] px-6 text-white text-xl font-black placeholder-slate-800 outline-none focus:border-blue-600 transition-all tracking-widest tabular-nums"
+                        className="w-full h-14 sm:h-16 bg-black/40 border-2 border-slate-900 rounded-[1.25rem] px-6 text-lg sm:text-xl font-black placeholder-slate-800 outline-none focus:border-blue-600 transition-all tracking-widest tabular-nums"
                         value={expiry}
                         onChange={(e) => setExpiry(e.target.value)}
                         required
@@ -250,7 +250,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex flex-col justify-end pb-2">
                       <p className="text-[9px] font-black text-slate-700 leading-tight uppercase tracking-widest">
-                        MFA Protocol: SMS verification will be triggered upon initiation.
+                        MFA Protocol: SMS verification will be triggered.
                       </p>
                     </div>
                   </div>
@@ -258,7 +258,7 @@ export default function CheckoutPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative w-full h-18 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-900 disabled:text-slate-800 text-white font-black py-5 rounded-[1.5rem] transition-all shadow-2xl shadow-blue-600/30 active:scale-[0.98] flex items-center justify-center gap-3 mt-4 text-lg tracking-[0.2em]"
+                    className="group relative w-full h-16 sm:h-18 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-900 disabled:text-slate-800 text-white font-black py-4 sm:py-5 rounded-[1.5rem] transition-all shadow-2xl shadow-blue-600/30 active:scale-[0.98] flex items-center justify-center gap-3 mt-4 text-base sm:text-lg tracking-[0.2em]"
                   >
                     {loading ? "INITIALIZING..." : "START TRANSACTION"}
                     {!loading && (
@@ -275,15 +275,15 @@ export default function CheckoutPage() {
                   className="space-y-10 animate-fade-in max-w-xl mx-auto py-6"
                 >
                   <div className="text-center space-y-4">
-                    <div className="w-20 h-20 bg-blue-600/10 rounded-[2rem] flex items-center justify-center mx-auto border border-blue-500/20 shadow-inner">
-                      <Smartphone className="text-blue-500" size={36} />
+                    <div className="w-16 sm:w-20 h-16 sm:h-20 bg-blue-600/10 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto border border-blue-500/20 shadow-inner">
+                      <Smartphone className="text-blue-500" size={30} sm:size={36} />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-2xl font-black text-white italic tracking-tighter">
+                      <h3 className="text-xl sm:text-2xl font-black text-white italic tracking-tighter uppercase">
                         MFA VERIFICATION
                       </h3>
-                      <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-                        6-Digit Cipher Transmitted To Device
+                      <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+                        6-Digit Cipher Sent To Device
                       </p>
                     </div>
                   </div>
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                       type="text"
                       maxLength={6}
                       placeholder="000000"
-                      className="w-full bg-black/40 border-2 border-slate-900 rounded-[2rem] py-8 text-center text-4xl font-black tracking-[0.5em] text-blue-500 outline-none focus:border-blue-600 transition-all placeholder-slate-900 tabular-nums shadow-inner shadow-black"
+                      className="w-full bg-black/40 border-2 border-slate-900 rounded-[2rem] py-6 sm:py-8 text-center text-3xl sm:text-4xl font-black tracking-[0.3em] sm:tracking-[0.5em] text-blue-500 outline-none focus:border-blue-600 transition-all placeholder-slate-900 tabular-nums shadow-inner shadow-black"
                       value={otpCode}
                       onChange={(e) => setOtpCode(e.target.value)}
                       autoFocus
@@ -306,12 +306,13 @@ export default function CheckoutPage() {
                     <button
                       type="submit"
                       disabled={loading || otpCode.length < 6}
-                      className="w-full h-18 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-900 disabled:text-slate-800 text-white font-black rounded-[1.5rem] transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-2xl shadow-emerald-600/30 text-lg tracking-[0.2em]"
+                      className="w-full h-16 sm:h-18 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-900 disabled:text-slate-800 text-white font-black rounded-[1.5rem] transition-all active:scale-[0.98] flex items-center justify-center gap-3 shadow-2xl shadow-emerald-600/30 text-base sm:text-lg tracking-[0.2em]"
                     >
                       {loading ? "VERIFYING..." : "FINALIZE PROTOCOL"}
                     </button>
 
                     <button
+                      button
                       type="button"
                       onClick={() => setStep("card")}
                       className="w-full text-[10px] font-black text-slate-700 hover:text-white transition-colors uppercase tracking-[0.3em]"
@@ -323,17 +324,17 @@ export default function CheckoutPage() {
                 </form>
               )}
 
-              <footer className="mt-16 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-6">
+              <footer className="mt-12 sm:mt-16 pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-3">
                   <ShieldCheck size={18} className="text-slate-700" />
                   <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">
-                    End-to-End Encrypted Terminal
+                    Encrypted Terminal
                   </span>
                 </div>
-                <div className="flex gap-4 items-center">
-                  <div className="w-8 h-4 bg-slate-900 rounded-sm opacity-30"></div>
-                  <div className="w-8 h-4 bg-slate-900 rounded-sm opacity-30"></div>
-                  <div className="w-8 h-4 bg-slate-900 rounded-sm opacity-30"></div>
+                <div className="flex gap-4 items-center opacity-30">
+                  <div className="w-8 h-4 bg-slate-900 rounded-sm"></div>
+                  <div className="w-8 h-4 bg-slate-900 rounded-sm"></div>
+                  <div className="w-8 h-4 bg-slate-900 rounded-sm"></div>
                 </div>
               </footer>
             </div>

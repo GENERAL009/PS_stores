@@ -85,7 +85,7 @@ export default function ProductDetail() {
     );
   if (!product)
     return (
-      <div className="mt-20 text-center py-20 bg-slate-900/50 rounded-3xl max-w-2xl mx-auto border border-slate-800">
+      <div className="mt-20 text-center py-20 bg-slate-900/50 rounded-3xl max-w-2xl mx-auto border border-slate-800 px-4">
         <h2 className="text-2xl font-bold text-white mb-2">Item not found</h2>
         <p className="text-slate-500 mb-6">
           The product you're looking for might have been moved or deleted.
@@ -113,8 +113,8 @@ export default function ProductDetail() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Image Gallery */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
-          <div className="premium-card rounded-[2.5rem] p-10 relative overflow-hidden flex items-center justify-center min-h-[500px]">
+        <div className="lg:col-span-7 flex flex-col gap-6 w-full overflow-hidden">
+          <div className="premium-card rounded-[2.5rem] p-6 am:p-10 relative overflow-hidden flex items-center justify-center min-h-[350px] sm:min-h-[500px]">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 z-0"></div>
             <div className="absolute top-6 left-6 z-10">
               <span className="px-4 py-1.5 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-blue-600/20">
@@ -130,7 +130,7 @@ export default function ProductDetail() {
                   className="object-contain w-full h-full z-10 drop-shadow-[0_20px_50px_rgba(37,99,235,0.3)] group-hover:scale-105 transition-transform duration-700"
                 />
               ) : (
-                <div className="w-full h-full bg-slate-900/50 rounded-3xl border border-slate-800 flex items-center justify-center italic text-slate-700 font-medium">
+                <div className="w-full h-full bg-slate-900/50 rounded-3xl border border-slate-800 flex items-center justify-center italic text-slate-700 font-medium text-center px-4">
                   No Image Available
                 </div>
               )}
@@ -143,7 +143,7 @@ export default function ProductDetail() {
                 <button
                   key={img.id}
                   onClick={() => setActiveImg(idx)}
-                  className={`relative shrink-0 w-24 h-24 p-2 rounded-2xl bg-slate-900 border-2 transition-all overflow-hidden ${
+                  className={`relative shrink-0 w-20 h-20 sm:w-24 sm:h-24 p-2 rounded-2xl bg-slate-900 border-2 transition-all overflow-hidden ${
                     activeImg === idx
                       ? "border-blue-500 ring-4 ring-blue-500/10"
                       : "border-slate-800 hover:border-slate-700 opacity-70 hover:opacity-100"
@@ -163,22 +163,22 @@ export default function ProductDetail() {
               <Star size={14} className="fill-blue-400" />
               Highly Rated Product
             </div>
-            <h1 className="text-5xl font-black text-white leading-tight tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight tracking-tight">
               {product.name}
             </h1>
-            <div className="flex items-center justify-between border-b border-slate-800 pb-6 mb-6">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-6 mb-6 gap-4">
               <div>
-                <p className="text-slate-500 text-sm font-medium">Model Specifications</p>
-                <p className="text-slate-200 font-bold">{product.model}</p>
+                <p className="text-slate-500 text-[10px] sm:text-sm font-medium uppercase tracking-widest">Model Specs</p>
+                <p className="text-slate-200 font-bold text-sm sm:text-base">{product.model}</p>
               </div>
               <div className="text-right">
-                <p className="text-slate-500 text-sm font-medium">Availability</p>
+                <p className="text-slate-500 text-[10px] sm:text-sm font-medium uppercase tracking-widest">Availability</p>
                 <p
-                  className={`font-bold ${
+                  className={`font-bold text-sm sm:text-base ${
                     product.stock > 0 ? "text-emerald-400" : "text-rose-500"
                   }`}
                 >
-                  {product.stock > 0 ? `${product.stock} Units left` : "Out of Stock"}
+                  {product.stock > 0 ? `${product.stock} Units` : "Out of Stock"}
                 </p>
               </div>
             </div>
@@ -188,7 +188,7 @@ export default function ProductDetail() {
             <h3 className="text-xs font-black uppercase text-slate-500 mb-3 tracking-widest">
               Description
             </h3>
-            <p className="text-slate-300 leading-relaxed font-medium">
+            <p className="text-slate-300 leading-relaxed font-medium text-sm sm:text-base">
               {isDescriptionLong && !isExpanded
                 ? `${product.description.substring(0, descriptionLimit)}...`
                 : product.description}
@@ -203,54 +203,54 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <div className="premium-card rounded-[2rem] p-8 space-y-6">
-            <div className="flex justify-between items-end">
+          <div className="premium-card rounded-[2rem] p-6 sm:p-8 space-y-6">
+            <div className="flex justify-between items-end gap-2">
               <div>
-                <p className="text-slate-400 text-sm font-medium mb-1 uppercase tracking-widest">
+                <p className="text-slate-400 text-[10px] sm:text-sm font-medium mb-1 uppercase tracking-widest">
                   Total Value
                 </p>
-                <div className="text-5xl font-black text-white flex items-start gap-1">
-                  <span className="text-2xl mt-1 text-blue-500">$</span>
+                <div className="text-4xl sm:text-5xl font-black text-white flex items-start gap-1">
+                  <span className="text-xl sm:text-2xl mt-1 text-blue-500 font-black">$</span>
                   {product.price}
                 </div>
               </div>
-              <div className="text-xs text-slate-500 font-medium text-right bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg">
-                Tax Included
+              <div className="text-[10px] text-slate-500 font-bold text-right bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg uppercase tracking-widest">
+                Tax Inc.
               </div>
             </div>
 
             <button
               onClick={addToCart}
               disabled={product.stock === 0}
-              className={`group w-full h-16 rounded-2xl flex items-center justify-center gap-3 transition-all text-xl font-black shadow-2xl ${
+              className={`group w-full h-14 sm:h-16 rounded-2xl flex items-center justify-center gap-3 transition-all text-lg sm:text-xl font-black shadow-2xl ${
                 product.stock === 0
                   ? "bg-slate-800 text-slate-600 grayscale cursor-not-allowed"
                   : "bg-blue-600 text-white hover:bg-blue-500 shadow-blue-600/30 hover:scale-[1.01] active:scale-95"
               }`}
             >
               <ShoppingCart
-                size={24}
+                size={20}
                 className={product.stock > 0 ? "group-hover:rotate-12 transition-transform" : ""}
               />
               {product.stock === 0 ? "NOT AVAILABLE" : "SECURE ORDER"}
             </button>
 
             <div className="grid grid-cols-3 gap-2 pt-2">
-              <div className="flex flex-col items-center p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
-                <ShieldCheck size={18} className="text-blue-400 mb-2" />
-                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">
+              <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
+                <ShieldCheck size={16} className="text-blue-400 mb-1 sm:mb-2" />
+                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500">
                   Warranty
                 </span>
               </div>
-              <div className="flex flex-col items-center p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
-                <Truck size={18} className="text-blue-400 mb-2" />
-                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">
-                  Fast Shipping
+              <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
+                <Truck size={16} className="text-blue-400 mb-1 sm:mb-2" />
+                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500">
+                  Shipping
                 </span>
               </div>
-              <div className="flex flex-col items-center p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
-                <RotateCcw size={18} className="text-blue-400 mb-2" />
-                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">
+              <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl border border-slate-800/50 bg-slate-900/30">
+                <RotateCcw size={16} className="text-blue-400 mb-1 sm:mb-2" />
+                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500">
                   Returns
                 </span>
               </div>
@@ -260,15 +260,15 @@ export default function ProductDetail() {
       </div>
 
       {/* Reviews Section */}
-      <div className="mt-24 space-y-10">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-8">
-          <h2 className="text-3xl font-black text-white flex items-center gap-4">
-            <div className="p-3 bg-blue-600/10 rounded-2xl text-blue-500">
-              <MessageSquare size={28} />
+      <div className="mt-16 sm:mt-24 space-y-10">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-8 gap-4">
+          <h2 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3 sm:gap-4">
+            <div className="p-2 sm:p-3 bg-blue-600/10 rounded-xl sm:rounded-2xl text-blue-500">
+              <MessageSquare size={22} sm:size={28} />
             </div>
-            Community Feedback
+            Feedback
           </h2>
-          <div className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-sm font-bold text-slate-400">
+          <div className="px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-lg text-[10px] font-black text-slate-400 uppercase tracking-widest">
             {product.comments?.length || 0} Reviews
           </div>
         </div>
@@ -278,43 +278,43 @@ export default function ProductDetail() {
             product.comments.map((c: any) => (
               <div
                 key={c.id}
-                className="premium-card rounded-3xl p-8 hover:border-blue-500/30 transition-colors group"
+                className="premium-card rounded-3xl p-6 sm:p-8 hover:border-blue-500/30 transition-colors group"
               >
                 <div className="flex justify-between items-start mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg">
                       {c.username[0].toUpperCase()}
                     </div>
                     <div>
-                      <span className="font-bold text-white block mb-0.5">{c.username}</span>
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                      <span className="font-bold text-white block mb-0.5 text-sm sm:text-base">{c.username}</span>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
                         {new Date(c.created_at).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
-                  <div className="flex text-blue-400">
+                  <div className="flex text-blue-400 pt-1">
                     {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} size={12} className="fill-blue-400" />
+                      <Star key={i} size={10} className="fill-blue-400" />
                     ))}
                   </div>
                 </div>
-                <p className="text-slate-400 leading-relaxed font-medium italic group-hover:text-slate-300 transition-colors">
+                <p className="text-slate-400 leading-relaxed font-medium italic group-hover:text-slate-300 transition-colors text-sm sm:text-base">
                   "{c.text}"
                 </p>
               </div>
             ))
           ) : (
-            <div className="col-span-full py-20 text-center bg-slate-900/20 rounded-3xl border-2 border-dashed border-slate-800">
+            <div className="col-span-full py-16 text-center bg-slate-900/20 rounded-3xl border-2 border-dashed border-slate-800 px-4">
               <p className="text-slate-600 font-bold text-lg mb-2">The arena is empty.</p>
-              <p className="text-slate-700 font-medium">Be the first player to share your thoughts!</p>
+              <p className="text-slate-700 font-medium text-sm">Be the first player to share your thoughts!</p>
             </div>
           )}
         </div>
 
         <div className="max-w-3xl">
           {accessToken ? (
-            <div className="premium-card rounded-[2.5rem] p-10 mt-12">
-              <h3 className="text-xl font-bold text-white mb-6">Leave Your Mark</h3>
+            <div className="premium-card rounded-[2.5rem] p-8 sm:p-10 mt-8 sm:mt-12">
+              <h3 className="text-lg sm:text-xl font-black text-white mb-6 uppercase tracking-widest">Leave Your Mark</h3>
               <form onSubmit={handlePostComment} className="space-y-6">
                 <div className="relative">
                   <textarea
@@ -323,28 +323,28 @@ export default function ProductDetail() {
                     required
                     rows={4}
                     placeholder="Tell us about your experience..."
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-white text-lg focus:outline-none focus:border-blue-500 transition-all placeholder:text-slate-600"
+                    className="w-full bg-slate-800/50 border border-slate-700 rounded-2xl p-5 sm:p-6 text-white text-base sm:text-lg focus:outline-none focus:border-blue-500 transition-all placeholder:text-slate-600 font-medium"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={commenting}
-                  className="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-blue-600/30 active:scale-95 disabled:grayscale"
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-blue-600/30 active:scale-95 disabled:grayscale uppercase tracking-widest shrink-0"
                 >
                   {commenting ? "SAVING..." : "PUBLISH REVIEW"}
                 </button>
               </form>
             </div>
           ) : (
-            <div className="premium-card rounded-[2.5rem] p-12 mt-12 text-center border-dashed border-blue-500/20">
-              <p className="text-slate-400 text-lg mb-8 font-medium">
+            <div className="premium-card rounded-[2.5rem] p-8 sm:p-12 mt-8 sm:mt-12 text-center border-dashed border-blue-500/20">
+              <p className="text-slate-400 text-base sm:text-lg mb-8 font-medium">
                 Join the community to post your own reviews.
               </p>
               <Link
                 href="/login"
-                className="bg-blue-600 hover:bg-blue-500 text-white px-12 py-4 rounded-2xl font-black text-xl transition-all shadow-xl shadow-blue-600/40"
+                className="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 sm:px-12 py-3 sm:py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-blue-600/40 uppercase tracking-widest"
               >
-                Log In to Participate
+                Log In
               </Link>
             </div>
           )}

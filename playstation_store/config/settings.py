@@ -26,11 +26,13 @@ SECRET_KEY = 'django-insecure-2qoak4hmjxcohw-yns12pu56rd@w&mp(5_1(&*o3!19^s1l*10
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['37.27.196.110', 'topgame.uz']
+ALLOWED_HOSTS = ['37.27.196.110', 'topgame.uz', 'www.topgame.uz', 'localhost']
 CSRF_TRUSTED_ORIGINS = [
     'http://37.27.196.110',
     'http://topgame.uz',
-    'https://topgame.uz'
+    'https://topgame.uz',
+    'http://www.topgame.uz',
+    'https://www.topgame.uz',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -96,8 +98,6 @@ UZUM_SERVICE_ID = os.getenv('UZUM_SERVICE_ID', 'mock_service_id')
 UZUM_BASE_URL = os.getenv('UZUM_BASE_URL', 'https://api.uzumbank.uz/v1/merchant')
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

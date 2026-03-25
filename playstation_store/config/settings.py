@@ -26,8 +26,12 @@ SECRET_KEY = 'django-insecure-2qoak4hmjxcohw-yns12pu56rd@w&mp(5_1(&*o3!19^s1l*10
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080']
+ALLOWED_HOSTS = ['37.27.196.110', 'topgame.uz']
+CSRF_TRUSTED_ORIGINS = [
+    'http://37.27.196.110',
+    'http://topgame.uz',
+    'https://topgame.uz'
+]
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

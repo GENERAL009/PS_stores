@@ -16,10 +16,10 @@ services:
     container_name: playstation_backend
     restart: always
     environment:
-      - DB_NAME=playstation_store_db
-      - DB_USER=root
-      - DB_PASSWORD=root_password
-      - DB_HOST=db
+      - DB_NAME=sai921_playstation_store_db
+      - DB_USER=sai921_root
+      - DB_PASSWORD=wE0vU9yC4j
+      - DB_HOST=5.252.195.161
       - DB_PORT=3306
     env_file:
       - ./playstation_store/.env

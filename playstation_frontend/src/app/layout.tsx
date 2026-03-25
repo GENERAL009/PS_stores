@@ -7,8 +7,8 @@ import { ToastContainer } from "@/components/Notifications/ToastContainer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PlayStation Store Elite",
-  description: "Next-gen E-Commerce aesthetic",
+  title: "PS ELITE | Premium Gaming Store",
+  description: "Next-gen gaming gear for the elite collective.",
 };
 
 export default function RootLayout({
@@ -18,15 +18,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased`}>
-        <ToastContainer />
+      <body className={`${inter.className} bg-black text-slate-300 min-h-screen selection:bg-blue-600 selection:text-white`}>
         <Navbar />
-        <main className="flex-1 w-full max-w-7xl mx-auto p-6">
+        <main className="max-w-7xl mx-auto min-h-screen">
           {children}
         </main>
-        <footer className="py-8 text-center text-sm text-slate-500 glass mt-auto border-t-0">
-          © 2026 PlayStation Store Elite Concept. Designed for greatness.
+        <footer className="py-20 border-t border-slate-950 text-center space-y-4">
+           <p className="text-[10px] font-black text-slate-800 tracking-[0.5em] uppercase">© 2026 PlayStation Store Elite Concept. Designed for greatness.</p>
+           <div className="flex justify-center gap-6 opacity-20 hover:opacity-100 transition-opacity">
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+           </div>
         </footer>
+        <ToastContainer />
       </body>
     </html>
   );

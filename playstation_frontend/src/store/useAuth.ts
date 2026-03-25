@@ -1,21 +1,37 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface AuthState {
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   user: any | null;
-  login: (token: string, user: any) => void;
+  login: (accessToken: string, refreshToken: string, user: any) => void;
   logout: () => void;
+  setAccessToken: (token: string) => void;
 }
 
 export const useAuth = create<AuthState>((set) => ({
-  token: null,
-  user: null,
-  login: (token, user) => {
-    if (typeof window !== 'undefined') localStorage.setItem('token', token);
-    set({ token, user });
+  accessToken: typeof window !== "undefined" ? localStorage.getItem("accessToken") : null,
+  refreshToken: typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null,
+  user: null, // Initially null, will be populated by profile fetch
+  login: (accessToken, refreshToken, user) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+    }
+    set({ accessToken, refreshToken, user });
   },
   logout: () => {
-    if (typeof window !== 'undefined') localStorage.removeItem('token');
-    set({ token: null, user: null });
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+    }
+    set({ accessToken: null, refreshToken: null, user: null });
+  },
+  setAccessToken: (token) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("accessToken", token);
+    }
+    set({ accessToken: token });
   },
 }));

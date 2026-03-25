@@ -2,7 +2,7 @@
 
 # Wait for database
 echo "Waiting for database..."
-DB_HOST="${DB_HOST:-5.252.195.161}"
+DB_HOST="${DB_HOST:-db}"
 DB_PORT="${DB_PORT:-3306}"
 while ! python -c "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect(('${DB_HOST}', int('${DB_PORT}')))" 2>/dev/null; do
   sleep 1

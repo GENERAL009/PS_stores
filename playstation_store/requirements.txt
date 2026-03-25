@@ -19,3 +19,4 @@ certifi
 charset-normalizer
 idna
 tzdata
+pkg_resources

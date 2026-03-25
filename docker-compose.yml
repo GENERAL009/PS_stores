@@ -1,16 +1,4 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: playstation_db
-    restart: always
-    environment:
-      MYSQL_DATABASE: playstation_store_db
-      MYSQL_ROOT_PASSWORD: root_password
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3307:3306"
-
   backend:
     build: ./playstation_store
     container_name: playstation_backend
@@ -23,8 +11,6 @@ services:
       - DB_PORT=3306
     env_file:
       - ./playstation_store/.env
-    depends_on:
-      - db
     volumes:
       - ./playstation_store/staticfiles:/app/staticfiles
       - ./playstation_store/static:/app/static
@@ -34,10 +20,7 @@ services:
     build: ./playstation_frontend
     container_name: playstation_frontend
     restart: always
-    env_file:
-      - ./playstation_frontend/.env.local
-    depends_on:
-      - backend
+    # No env_file needed — env vars are baked in at Next.js build time
 
   nginx:
     image: nginx:latest
@@ -48,10 +31,7 @@ services:
       - ./playstation_store/staticfiles:/app/static:ro
       - ./playstation_store/media:/app/media
     ports:
-      - "8080:80"
+      - "80:80"
     depends_on:
       - frontend
       - backend
-
-volumes:
-  mysql_data:

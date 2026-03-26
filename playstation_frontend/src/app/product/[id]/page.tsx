@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
 import { useCart } from "@/store/useCart";
@@ -15,7 +15,9 @@ import {
   Plus,
   Minus,
   Maximize2,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotificationStore } from "@/store/useNotificationStore";
@@ -34,6 +36,28 @@ export default function ProductDetail() {
   
   // Gallery state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const handleNext = useCallback(() => {
+    if (!product?.images?.length) return;
+    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+  }, [product]);
+
+  const handlePrev = useCallback(() => {
+    if (!product?.images?.length) return;
+    setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+  }, [product]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "Escape") setIsModalOpen(false);
+      if (e.key === "Enter" && !isModalOpen) setIsModalOpen(true);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleNext, handlePrev, isModalOpen]);
+
 
   useEffect(() => {
     api
@@ -123,11 +147,15 @@ export default function ProductDetail() {
               </motion.div>
               
               {/* Image Sub-indicators */}
-              <div className="flex gap-4 mt-6">
+              <div className="flex gap-4 mt-6 overflow-x-auto pb-4 no-scrollbar">
                  {product.images?.map((img: any, idx: number) => (
-                    <div key={idx} className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 p-3 overflow-hidden opacity-50 hover:opacity-100 cursor-pointer transition-all">
+                    <button 
+                      key={idx} 
+                      onClick={() => setCurrentImageIndex(idx)}
+                      className={`min-w-[5rem] h-20 rounded-2xl bg-slate-900 border transition-all p-3 overflow-hidden ${currentImageIndex === idx ? 'border-blue-600 opacity-100 scale-105 shadow-2xl shadow-blue-600/20' : 'border-slate-800 opacity-40 hover:opacity-100'}`}
+                    >
                        <img src={img.image} className="w-full h-full object-contain" />
-                    </div>
+                    </button>
                  ))}
               </div>
            </div>
@@ -150,9 +178,9 @@ export default function ProductDetail() {
             </div>
 
             <div className="space-y-2">
-               <h1 className="text-5xl sm:text-7xl font-black text-white tracking-tighter uppercase italic leading-none">
+               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-5xl sm:text-7xl lg:text-8xl font-black text-white tracking-tight uppercase italic leading-[0.9] decoration-blue-600/30 decoration-8">
                  {product.name}
-               </h1>
+               </motion.h1>
                <div className="flex items-center gap-4 text-slate-500 font-bold uppercase tracking-widest text-xs">
                  <span>Model: {product.model}</span>
                  <div className="w-1.5 h-1.5 rounded-full bg-slate-800"></div>
@@ -160,7 +188,7 @@ export default function ProductDetail() {
                </div>
             </div>
 
-            <p className="text-slate-400 text-lg sm:text-xl leading-relaxed font-medium">
+            <p className="text-slate-400 text-lg sm:text-xl leading-relaxed font-medium italic">
               {product.description}
             </p>
           </div>
@@ -317,25 +345,61 @@ export default function ProductDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-10 cursor-zoom-out"
-            onClick={() => setIsModalOpen(false)}
+            className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-20"
           >
             <motion.button 
-              className="absolute top-8 right-8 w-14 h-14 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors z-[110]"
-              onClick={(e) => { e.stopPropagation(); setIsModalOpen(false); }}
+              className="absolute top-10 right-10 w-16 h-16 rounded-3xl bg-white/5 hover:bg-red-500/80 flex items-center justify-center transition-all z-[110] border border-white/10 group/close"
+              onClick={() => setIsModalOpen(false)}
             >
-               <X className="text-white" size={30} />
+               <X className="text-white group-hover:scale-110 transition-transform" size={32} />
             </motion.button>
+
+            {/* Modal Navigation */}
+            {product.images?.length > 1 && (
+              <>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                  className="absolute left-10 top-1/2 -translate-y-1/2 w-20 h-20 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:bg-blue-600 transition-all z-[110]"
+                >
+                  <ChevronLeft size={40} />
+                </button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                  className="absolute right-10 top-1/2 -translate-y-1/2 w-20 h-20 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center justify-center text-white hover:bg-blue-600 transition-all z-[110]"
+                >
+                  <ChevronRight size={40} />
+                </button>
+              </>
+            )}
             
-            <motion.img
+            <motion.div 
               layoutId="product-main-image"
-              src={product.images?.[0]?.image}
-              alt={product.name}
-              className="max-w-full max-h-full object-contain drop-shadow-[0_40px_100px_rgba(37,99,235,0.4)]"
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-            />
+              className="relative w-full h-full flex flex-col items-center justify-center"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentImageIndex}
+                  initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -30 }}
+                  src={product.images?.[currentImageIndex]?.image}
+                  alt={product.name}
+                  className="max-w-full max-h-[80vh] object-contain drop-shadow-[0_40px_100px_rgba(37,99,235,0.4)]"
+                />
+              </AnimatePresence>
+              
+              {/* Modal Thumbnails */}
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4">
+                 {product.images?.map((img: any, idx: number) => (
+                    <button 
+                      key={idx} 
+                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                      className={`w-4 h-4 rounded-full transition-all ${currentImageIndex === idx ? 'bg-blue-600 w-12' : 'bg-slate-800 hover:bg-slate-600'}`}
+                    ></button>
+                 ))}
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

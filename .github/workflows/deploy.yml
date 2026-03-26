@@ -9,10 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH and Deploy
+      - name: SSH and Deploy Domen
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_DOM }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -20,10 +20,10 @@ jobs:
             git pull origin main
             docker-compose up --build -d
 
-      - name: SSH and Deploy Domen
+      - name: SSH and Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_DOM }}
+          host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |

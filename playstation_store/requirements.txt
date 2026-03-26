@@ -19,4 +19,4 @@ certifi
 charset-normalizer
 idna
 tzdata
-
+django-redis==5.4.0

@@ -1,3 +1,6 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.conf import settings
 ﻿from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from .models import Category, Product, Comment, ProductImage
@@ -9,12 +12,14 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             return True
         return bool(request.user and request.user.is_staff)
 
+@method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = 'uuid'
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('-created_at')
     serializer_class = ProductSerializer

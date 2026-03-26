@@ -9,6 +9,8 @@
       - DB_PASSWORD=wE0vU9yC4j
       - DB_HOST=5.252.195.161
       - DB_PORT=3306
+    depends_on:
+      - redis
     env_file:
       - ./playstation_store/.env
     volumes:
@@ -21,6 +23,12 @@
     container_name: playstation_frontend
     restart: always
     # No env_file needed — env vars are baked in at Next.js build time
+
+
+  redis:
+    image: redis:alpine
+    container_name: playstation_redis
+    restart: always
 
   nginx:
     image: nginx:latest

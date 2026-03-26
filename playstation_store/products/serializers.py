@@ -1,5 +1,6 @@
-from rest_framework import serializers
-from .models import Category, Product, Accessory, Game, ProductImage
+﻿from rest_framework import serializers
+from .models import Category, Product, Accessory, Game, ProductImage, Comment
+from users.serializers import UserSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,12 +23,10 @@ class ProductImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image']
 
 class CommentSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username', read_only=True)
+    user = UserSerializer(read_only=True)
     class Meta:
-        from .models import Comment
         model = Comment
-        fields = ['id', 'user', 'username', 'text', 'created_at']
-        read_only_fields = ['user']
+        fields = ['id', 'user', 'text', 'created_at']
 
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)

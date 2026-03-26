@@ -1,6 +1,7 @@
-from rest_framework import viewsets, permissions
-from .models import Category, Product
-from .serializers import CategorySerializer, ProductSerializer
+﻿from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
+from .models import Category, Product, Comment, ProductImage
+from .serializers import CategorySerializer, ProductSerializer, CommentSerializer
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -25,24 +26,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(category_id=category_id)
         return queryset
 
-    from rest_framework.decorators import action
-    from rest_framework.response import Response
-    from rest_framework import status
-
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
-    def comment(self, request, pk=None):
-        product = self.get_object()
-        text = request.data.get('text')
-        if not text:
-            return self.Response({'error': 'Comment text required'}, status=self.status.HTTP_400_BAD_REQUEST)
-        from .models import Comment
-        Comment.objects.create(product=product, user=request.user, text=text)
-        return self.Response({'status': 'Comment added'})
-
     def create(self, request, *args, **kwargs):
-        from rest_framework.response import Response
-        from rest_framework import status
-        from .models import ProductImage
         response = super().create(request, *args, **kwargs)
         product = Product.objects.get(id=response.data['id'])
         for f in request.FILES.getlist('uploaded_images'):
@@ -50,7 +34,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         return response
 
     def update(self, request, *args, **kwargs):
-        from .models import ProductImage
         response = super().update(request, *args, **kwargs)
         product = self.get_object()
         if request.FILES.getlist('uploaded_images'):
@@ -58,3 +41,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             for f in request.FILES.getlist('uploaded_images'):
                 ProductImage.objects.create(product=product, image=f)
         return response
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all().order_by('-created_at')
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        product_id = self.request.data.get('product')
+        product = Product.objects.get(id=product_id)
+        serializer.save(user=self.request.user, product=product)
+
+    def create(self, request, *args, **kwargs):
+        # Override to add product_id handling if needed or just use default
+        product_id = request.data.get('product')
+        if not product_id:
+            return Response({'error': 'Product ID required'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)

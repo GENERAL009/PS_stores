@@ -27,3 +27,4 @@ class ProfileView(generics.RetrieveAPIView):
         data = serializer.data
         data['orders'] = orders_data
         return Response(data)
+#

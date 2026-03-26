@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useCart } from "@/store/useCart";
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                 >
                   <div className="text-center space-y-4">
                     <div className="w-16 sm:w-20 h-16 sm:h-20 bg-blue-600/10 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto border border-blue-500/20 shadow-inner">
-                      <Smartphone className="text-blue-500" size={30} sm:size={36} />
+                      <Smartphone className="text-blue-500" size={36} />
                     </div>
                     <div className="space-y-1">
                       <h3 className="text-xl sm:text-2xl font-black text-white italic tracking-tighter uppercase">
@@ -312,7 +312,6 @@ export default function CheckoutPage() {
                     </button>
 
                     <button
-                      button
                       type="button"
                       onClick={() => setStep("card")}
                       className="w-full text-[10px] font-black text-slate-700 hover:text-white transition-colors uppercase tracking-[0.3em]"

@@ -3,18 +3,21 @@ from django.conf import settings
 from products.models import Product
 
 class Cart(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cart')
 
     def __str__(self):
-        return f"Cart of {self.user.first_name} {self.user.last_name}"
+        return f"Cart of {self.user.email}"
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cartitem_set')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
+    class Meta:
+        unique_together = ('cart', 'product')
+
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in {self.cart.user.get_full_name()}'s Cart"
+        return f"{self.quantity} x {self.product.name}"
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -28,7 +31,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order #{self.id} by {self.user.get_full_name()} - {self.status}"
+        return f"Order #{self.id} - {self.status}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
@@ -37,4 +40,4 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name if self.product else 'Unknown Product'} in Order #{self.order.id}"
+        return f"{self.quantity} x {self.product.name if self.product else 'Unknown'}"

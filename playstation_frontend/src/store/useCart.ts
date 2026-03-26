@@ -1,14 +1,28 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
-export const useCart = create((set) => ({
-  items: [],
-  setItems: (items: any) => set({ items }),
-  total: () => {
-    const state = useCart.getState() as any;
-    return state.items.reduce((acc: number, item: any) => {
-      // Handle both backend structure (item.product.price) and frontend structure (item.price)
-      const price = item.product?.price || item.price || 0;
-      return acc + (price * item.quantity);
-    }, 0);
-  }
-}));
+interface CartState {
+  items: any[];
+  setItems: (items: any[]) => void;
+  total: () => number;
+}
+
+export const useCart = create<CartState>()(
+  persist(
+    (set, get: any) => ({
+      items: [],
+      setItems: (items: any) => set({ items }),
+      total: () => {
+        const state = get();
+        return state.items.reduce((acc: number, item: any) => {
+          const price = item.product?.price || item.price || 0;
+          return acc + (price * item.quantity);
+        }, 0);
+      }
+    }),
+    {
+      name: 'ps-cart-storage',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

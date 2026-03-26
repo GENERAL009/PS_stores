@@ -11,8 +11,6 @@ import requests
 from requests.auth import HTTPBasicAuth
 import time
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
 class CartView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -32,10 +30,14 @@ class CartView(views.APIView):
             return response.Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
         cart, _ = Cart.objects.get_or_create(user=request.user)
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        if not created:
+        
+        # Use filter and update/create manually to be more robust than get_or_create without unique_together (though we added it)
+        cart_item = CartItem.objects.filter(cart=cart, product=product).first()
+        if cart_item:
             cart_item.quantity += 1
             cart_item.save()
+        else:
+            CartItem.objects.create(cart=cart, product=product, quantity=1)
         
         return response.Response({'message': 'Added to cart'})
 
@@ -56,7 +58,7 @@ class CheckoutView(views.APIView):
                 for item in items:
                     if item.product.stock < item.quantity:
                         return response.Response({
-                            'error': f'Not enough stock for {item.product.name}. Only {item.product.stock} left.'
+                            'error': f'Not enough stock for {item.product.name}.'
                         }, status=status.HTTP_400_BAD_REQUEST)
 
                 total = sum([item.product.price * item.quantity for item in items])
@@ -73,33 +75,9 @@ class CheckoutView(views.APIView):
                     item.product.save()
 
                 cart.cartitem_set.all().delete()
-                
                 return response.Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return response.Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-class CreatePaymentIntentView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-        items = cart.cartitem_set.all()
-        if not items:
-            return response.Response({'error': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
-
-        total_amount = sum([item.product.price * item.quantity for item in items])
-        
-        try:
-            intent = stripe.PaymentIntent.create(
-                amount=int(total_amount * 100),
-                currency='usd',
-                metadata={'order_id': f'cart_{cart.id}'}
-            )
-            return response.Response({
-                'clientSecret': intent.client_secret
-            })
-        except Exception as e:
-            return response.Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UzumInitializePaymentView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -111,6 +89,16 @@ class UzumInitializePaymentView(views.APIView):
 
         total_amount = sum([item.product.price * item.quantity for item in cart.cartitem_set.all()])
         
+        if settings.UZUM_LOGIN == 'mock_login':
+            import uuid
+            transaction_id = str(uuid.uuid4())
+            request.session['uzum_transaction_id'] = transaction_id
+            return response.Response({
+                'status': 'success',
+                'transaction_id': transaction_id,
+                'message': 'MOCK: SMS code sent'
+            })
+
         payload = {
             "serviceId": settings.UZUM_SERVICE_ID,
             "amount": int(total_amount * 100),
@@ -121,16 +109,6 @@ class UzumInitializePaymentView(views.APIView):
                 "expiry": request.data.get('expiry')
             }
         }
-
-        if settings.UZUM_LOGIN == 'mock_login':
-            import uuid
-            transaction_id = str(uuid.uuid4())
-            request.session['uzum_transaction_id'] = transaction_id
-            return response.Response({
-                'status': 'success',
-                'transaction_id': transaction_id,
-                'message': 'MOCK: SMS code sent'
-            })
 
         try:
             res = requests.post(
@@ -197,13 +175,10 @@ class SalesStatsView(views.APIView):
         period = request.GET.get('period', '30')
         selected_category = request.GET.get('category')
         
-        try:
-            days = int(period)
-        except ValueError:
-            days = 30
+        try: days = int(period)
+        except ValueError: days = 30
             
         start_date = timezone.now() - timedelta(days=days)
-        
         from .models import OrderItem
         order_items = OrderItem.objects.filter(order__created_at__gte=start_date)
         

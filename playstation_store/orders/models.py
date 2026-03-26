@@ -1,6 +1,7 @@
-from django.db import models
+﻿from django.db import models
 from django.conf import settings
 from products.models import Product
+import uuid
 
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cart')
@@ -20,6 +21,7 @@ class CartItem(models.Model):
         return f"{self.quantity} x {self.product.name}"
 
 class Order(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=50, default='pending', choices=[

@@ -22,13 +22,13 @@ class CartView(views.APIView):
         return response.Response(serializer.data)
 
     def post(self, request):
-        product_id = request.data.get('product_id')
-        if not product_id:
+        product_uuid = request.data.get('product_id')
+        if not product_uuid:
             return response.Response({'error': 'product_id required'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            product = Product.objects.get(id=product_id)
-        except Product.DoesNotExist:
+            product = Product.objects.get(uuid=product_uuid)
+        except (Product.DoesNotExist, ValueError):
             return response.Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
         cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -87,14 +87,18 @@ class CreatePaymentIntentView(views.APIView):
         items = cart.cartitem_set.all()
         if not items:
             return response.Response({'error': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
+
         total_amount = sum([item.product.price * item.quantity for item in items])
+        
         try:
             intent = stripe.PaymentIntent.create(
                 amount=int(total_amount * 100),
                 currency='usd',
                 metadata={'order_id': f'cart_{cart.id}'}
             )
-            return response.Response({'clientSecret': intent.client_secret})
+            return response.Response({
+                'clientSecret': intent.client_secret
+            })
         except Exception as e:
             return response.Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -202,15 +206,15 @@ class SalesStatsView(views.APIView):
         order_items = OrderItem.objects.filter(order__created_at__gte=start_date)
         
         if selected_category:
-            order_items = order_items.filter(product__category_id=selected_category)
+            order_items = order_items.filter(product__category_uuid=selected_category)
             
-        products_sold = list(order_items.values('product__id', 'product__name', 'product__category__name') 
+        products_sold = list(order_items.values('product__uuid', 'product__name', 'product__category__name') 
             .annotate(total_sold=Sum('quantity')) 
             .order_by('-total_sold')[:20])
             
         categories_stats = list(Category.objects.annotate(
             total_sales=Sum('product__orderitem__quantity', filter=Q(product__orderitem__order__created_at__gte=start_date))
-        ).values('id', 'name', 'total_sales').order_by('-total_sales'))
+        ).values('uuid', 'name', 'total_sales').order_by('-total_sales'))
 
         return response.Response({
             'period': period,

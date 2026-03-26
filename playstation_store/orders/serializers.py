@@ -1,10 +1,17 @@
-from rest_framework import serializers
+﻿from rest_framework import serializers
 from .models import Cart, CartItem, Order, OrderItem
 from products.serializers import ProductSerializer
+from products.models import Product
 
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
-    product_id = serializers.IntegerField(write_only=True)
+    # Use UUID for input from frontend
+    product_id = serializers.SlugRelatedField(
+        queryset=Product.objects.all(),
+        slug_field='uuid',
+        source='product',
+        write_only=True
+    )
 
     class Meta:
         model = CartItem
@@ -23,12 +30,16 @@ class CartSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
+    product_id = serializers.UUIDField(source='product.uuid', read_only=True)
+    
     class Meta:
         model = OrderItem
-        fields = ['id', 'product_name', 'quantity', 'price']
+        fields = ['id', 'product_id', 'product_name', 'quantity', 'price']
 
 class OrderSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(source='uuid', read_only=True)
     items = OrderItemSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Order
         fields = ['id', 'user', 'total_price', 'status', 'created_at', 'items']

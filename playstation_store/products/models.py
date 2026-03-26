@@ -1,7 +1,9 @@
-from django.db import models
+﻿from django.db import models
 from django.conf import settings
+import uuid
 
 class Category(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=100)
     
     class Meta:
@@ -11,6 +13,7 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=255)
     model = models.CharField(max_length=100)
     description = models.TextField()

@@ -1,4 +1,4 @@
-services:
+﻿services:
   backend:
     build: ./playstation_store
     container_name: playstation_backend
@@ -30,8 +30,10 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./playstation_store/staticfiles:/app/static:ro
       - ./playstation_store/media:/app/media
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - frontend
       - backend

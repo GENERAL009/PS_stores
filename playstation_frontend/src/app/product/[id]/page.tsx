@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNotificationStore } from "@/store/useNotificationStore";
+import Link from "next/link";
 
 export default function ProductDetail() {
   const { id } = useParams();

@@ -1,4 +1,4 @@
-from rest_framework import views, response, status, permissions
+﻿from rest_framework import views, response, status, permissions
 from .models import Cart, CartItem, Order
 from .serializers import CartSerializer, OrderSerializer
 from products.models import Product, Category
@@ -10,6 +10,8 @@ from datetime import timedelta
 import requests
 from requests.auth import HTTPBasicAuth
 import time
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CartView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -30,8 +32,6 @@ class CartView(views.APIView):
             return response.Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
 
         cart, _ = Cart.objects.get_or_create(user=request.user)
-        
-        # Use filter and update/create manually to be more robust than get_or_create without unique_together (though we added it)
         cart_item = CartItem.objects.filter(cart=cart, product=product).first()
         if cart_item:
             cart_item.quantity += 1
@@ -78,6 +78,25 @@ class CheckoutView(views.APIView):
                 return response.Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return response.Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class CreatePaymentIntentView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        items = cart.cartitem_set.all()
+        if not items:
+            return response.Response({'error': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
+        total_amount = sum([item.product.price * item.quantity for item in items])
+        try:
+            intent = stripe.PaymentIntent.create(
+                amount=int(total_amount * 100),
+                currency='usd',
+                metadata={'order_id': f'cart_{cart.id}'}
+            )
+            return response.Response({'clientSecret': intent.client_secret})
+        except Exception as e:
+            return response.Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UzumInitializePaymentView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]

@@ -117,7 +117,7 @@ export default function ProductDetail() {
   if (!product)
     return (
       <div className="text-center py-20">
-         <h2 className="text-2xl font-black text-slate-800 uppercase tracking-widest italic">Asset Not Found</h2>
+         <h2 className="text-2xl font-black text-slate-800 uppercase tracking-widest">Asset Not Found</h2>
       </div>
     );
 
@@ -178,7 +178,7 @@ export default function ProductDetail() {
             </div>
 
             <div className="space-y-2">
-               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-5xl sm:text-7xl lg:text-8xl font-black text-white tracking-tight uppercase italic leading-[0.9] decoration-blue-600/30 decoration-8">
+               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-4xl sm:text-5xl lg:text-5xl font-black text-white tracking-tight uppercase leading-[0.9] decoration-blue-600/30 decoration-8">
                  {product.name}
                </motion.h1>
                <div className="flex items-center gap-4 text-slate-500 font-bold uppercase tracking-widest text-xs">
@@ -188,7 +188,7 @@ export default function ProductDetail() {
                </div>
             </div>
 
-            <p className="text-slate-400 text-lg sm:text-xl leading-relaxed font-medium italic">
+            <p className="text-slate-400 text-base sm:text-lg leading-relaxed font-medium">
               {product.description}
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function ProductDetail() {
                 <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em] mb-2">Acquisition Value</p>
                 <div className="flex items-start gap-1">
                   <span className="text-blue-600 text-xl font-black mt-2">$</span>
-                  <span className="text-6xl font-black text-white tabular-nums tracking-tighter italic">
+                  <span className="text-5xl font-black text-white tabular-nums tracking-tight">
                     {product.price}
                   </span>
                 </div>
@@ -213,11 +213,11 @@ export default function ProductDetail() {
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-black/40 border border-slate-900 space-y-1">
                  <p className="text-[9px] font-black text-slate-600 uppercase">Availability</p>
-                 <p className="text-white font-black italic">{product.stock > 0 ? "IN STOCK" : "DEPLETED"}</p>
+                 <p className="text-white font-black">{product.stock > 0 ? "IN STOCK" : "DEPLETED"}</p>
               </div>
               <div className="p-4 rounded-2xl bg-black/40 border border-slate-900 space-y-1">
                  <p className="text-[9px] font-black text-slate-600 uppercase">Warranty</p>
-                 <p className="text-white font-black italic">GLOBAL ELITE</p>
+                 <p className="text-white font-black">GLOBAL ELITE</p>
               </div>
             </div>
 
@@ -246,7 +246,7 @@ export default function ProductDetail() {
       {/* Footer Section: Comments & Specs */}
       <div className="mt-32 space-y-16">
         <div className="flex items-center gap-6 mb-12">
-           <h2 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">COMMUNICATIONS</h2>
+           <h2 className="text-4xl font-black text-white tracking-tight uppercase leading-none">COMMUNICATIONS</h2>
            <div className="flex-1 h-px bg-gradient-to-r from-slate-900 to-transparent"></div>
         </div>
 
@@ -262,7 +262,7 @@ export default function ProductDetail() {
                </div>
                <div>
                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Signed In As</p>
-                  <p className="text-sm font-black text-white italic uppercase tracking-tight">Active Operative</p>
+                  <p className="text-sm font-black text-white uppercase tracking-tight">Active Operative</p>
                </div>
             </div>
 
@@ -286,7 +286,7 @@ export default function ProductDetail() {
              <div className="w-20 h-20 rounded-[2rem] bg-blue-600 flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-blue-600/40 group-hover:scale-110 transition-transform duration-500">
                 <User className="text-white" size={40} />
              </div>
-             <p className="text-slate-300 text-xl sm:text-2xl font-black mb-10 max-w-sm mx-auto uppercase italic tracking-tighter leading-tight">
+             <p className="text-slate-300 text-xl sm:text-2xl font-black mb-10 max-w-sm mx-auto uppercase tracking-tight leading-tight">
                Authentification Required to Submit Data
              </p>
              <Link
@@ -317,14 +317,14 @@ export default function ProductDetail() {
               </div>
               <div className="pb-10 space-y-3 flex-1 overflow-hidden">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <h4 className="font-black text-white italic tracking-tight uppercase leading-none truncate">
+                  <h4 className="font-black text-white tracking-tight uppercase leading-none truncate">
                     {comment.user?.first_name || "Anonymous"} {comment.user?.last_name || "Operative"}
                   </h4>
                   <span className="text-[10px] font-bold text-slate-700 uppercase tracking-widest shrink-0">
                     {new Date(comment.created_at).toLocaleDateString()} - Encrypted
                   </span>
                 </div>
-                <p className="text-slate-500 text-lg sm:text-xl font-medium leading-relaxed break-words">
+                <p className="text-slate-500 text-base sm:text-lg font-medium leading-relaxed break-words">
                   {comment.text}
                 </p>
               </div>
